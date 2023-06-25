@@ -12,6 +12,12 @@ WiFiManager wifiManager;
 // #define WIFI_SSID "YOUR_SSID"
 // #define WIFI_PASS "YOUR_PASSWORD"
 
+void handleRoot();
+void handleUpload();
+uint32_t WriteSPI32(uint32_t w);
+void upload(void);
+
+
 void setup() {
   Serial.begin(115200);
   Serial.setTimeout(-1);
