@@ -6,14 +6,14 @@
 #include "gba-spi.h"
 #include "multiboot.h"
 
+// Create a secrets.h file with #define's for WIFI_SSID and WIFI_PASS to hardcode your WiFi credentials.
+// This will lead to a faster and more stable connection than the configuration portal.
+// Alternatively, comment out this line to use the portal.
+#include "secrets.h"
+
 ESP8266WebServer server(80);
 WiFiManager wifiManager;
 Multiboot multiboot;
-
-// Uncomment the following lines to hardcode your WiFi credentials. This will lead to a faster and more stable
-// connection than the configuration portal.
-// #define WIFI_SSID "YOUR_SSID"
-// #define WIFI_PASS "YOUR_PASSWORD"
 
 void handleRoot();
 void handleUpload();
