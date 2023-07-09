@@ -1,7 +1,7 @@
 #include "multiboot.h"
 
 bool Multiboot::isGbaReady() {
-    if (GBA_SPI.WriteSPI32(0x00006202) >> 16 == 0x7202) {
+    if (GBA_SPI.WriteSPI32(MULTIBOOT_START_COMMAND) >> 16 == MULTIBOOT_START_RESPONSE) {
         return true;
     }
     return false;
@@ -26,12 +26,12 @@ void Multiboot::startMultiboot(File romfile) {
   }
 
   Serial.println("Searching for GBA");
-  while(GBA_SPI.WriteSPI32(0x00006202) >> 16 != 0x7202) { // GBA SP returns 0x72026203?
+  while(GBA_SPI.WriteSPI32(MULTIBOOT_START_COMMAND) >> 16 != MULTIBOOT_START_RESPONSE) { // GBA SP returns 0x72026203?
     yield(); // keep ESP8266 WDT happy
   }
 
   Serial.println("GBA found!");
-  r = GBA_SPI.WriteSPI32(0x00006202);
+  r = GBA_SPI.WriteSPI32(MULTIBOOT_START_COMMAND);
   Serial.println("Recognition OK");
   r = GBA_SPI.WriteSPI32(0x00006102);
 

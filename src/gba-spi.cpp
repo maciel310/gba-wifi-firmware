@@ -8,7 +8,7 @@ GbaSpi::GbaSpi() {
 void GbaSpi::begin() {
     SPI.setDataMode(SPI_MODE3);
     SPI.setBitOrder(MSBFIRST);
-    SPI.setFrequency(500000);
+    SPI.setFrequency(256000);
     SPI.begin();
 }
 

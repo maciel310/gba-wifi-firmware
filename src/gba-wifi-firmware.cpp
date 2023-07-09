@@ -53,8 +53,20 @@ void setup() {
 }
 
 void loop() {
-  if (multiboot.isGbaReady()) {
+  uint32_t r = GBA_SPI.WriteSPI32(multiboot.MULTIBOOT_START_COMMAND);
+  if (r >> 16 == multiboot.MULTIBOOT_START_RESPONSE) {
     multiboot.startMultiboot(LittleFS.open("/rom_mb.gba", "r"));
+    delay(1000);
+  }
+  if (r == 0x00031000) {
+    for (uint32_t x = 93; x < 120; x++) {
+      Serial.print("Next: ");
+
+      uint32_t response = GBA_SPI.WriteSPI32(x);
+      Serial.println(response);
+
+      delay(100);
+    }
   }
 
   wifiManager.process();
