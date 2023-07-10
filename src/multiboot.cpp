@@ -9,7 +9,7 @@ bool Multiboot::isGbaReady() {
 
 void Multiboot::startMultiboot(File romfile) {
   uint32_t fpos;
-  uint32_t r, w, bit;
+  uint32_t r, w, bit, retry_count;
 
   if (!romfile) {
     Serial.println("Failed to open file for reading");
@@ -126,8 +126,13 @@ void Multiboot::startMultiboot(File romfile) {
   }
 
   Serial.print("Waiting for GBA to respond with CRC: ");
-  while(GBA_SPI.WriteSPI32(0x00000065) != 0x00750065) {
+  retry_count = 10000;
+  while(GBA_SPI.WriteSPI32(0x00000065) != 0x00750065 && (--retry_count) > 0) {
     yield(); // keep ESP8266 WDT happy
+  }
+  if (retry_count == 0) {
+    Serial.println("Timeout waiting for CRC.");
+    return;
   }
 
   Serial.println("GBA CRC ready");
