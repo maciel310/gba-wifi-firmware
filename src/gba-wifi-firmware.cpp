@@ -19,6 +19,9 @@ void handleRoot();
 void handleUpload();
 
 
+#define GBA_WIFI_CONSTANT_ROM_LOADED 0x0310FEED
+
+
 void setup() {
   Serial.begin(115200);
   Serial.setTimeout(-1);
@@ -58,7 +61,7 @@ void loop() {
     multiboot.startMultiboot(LittleFS.open("/rom_mb.gba", "r"));
     delay(1000);
   }
-  if (r == 0x00031000) {
+  if (r == GBA_WIFI_CONSTANT_ROM_LOADED) {
     for (uint32_t x = 93; x < 120; x++) {
       Serial.print("Next: ");
 
