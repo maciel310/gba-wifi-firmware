@@ -62,14 +62,18 @@ void loop() {
     delay(1000);
   }
   if (r == GBA_WIFI_CONSTANT_ROM_LOADED) {
-    for (uint32_t x = 93; x < 120; x++) {
-      Serial.print("Next: ");
+    GBA_SPI.enableDebugging();
 
-      uint32_t response = GBA_SPI.WriteSPI32(x);
-      Serial.println(response);
-
-      delay(100);
+    Serial.println("Sending ADD command.");
+    GBA_SPI.WriteSPI32(0x03100502);
+    delay(10);
+    for (uint32_t i = 0; i < 5; i++) {
+      GBA_SPI.WriteSPI32(i*2);
+      delay(10);
     }
+    GBA_SPI.WriteSPI32(0x80000000);
+
+    GBA_SPI.disableDebugging();
   }
 
   wifiManager.process();
@@ -102,9 +106,11 @@ void handleUpload() {
       romfile.close();
 
       // Send REBOOT signal to running ROM.
-      for (int i = 0; i < 10; i++) {
+      for (int i = 0; i < 3; i++) {
         Serial.println("Sending reboot signal");
-        GBA_SPI.WriteSPI32(0xAABBCCDD);
+        GBA_SPI.WriteSPI32(0x03100001);
+        GBA_SPI.WriteSPI32(0x80000000);
+        delay(5);
       }
     }
     yield();
