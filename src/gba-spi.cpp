@@ -13,6 +13,10 @@ void GbaSpi::begin() {
 }
 
 uint32_t GbaSpi::WriteSPI32(uint32_t w) {
+  if (debugging_enabled) {
+    Serial.print("Sending: ");
+    Serial.print(w, HEX);
+  }
   uint32_t rx[4];
 
   rx[0] = SPI.transfer((w >> 24) & 0xFF);
@@ -22,9 +26,22 @@ uint32_t GbaSpi::WriteSPI32(uint32_t w) {
 
   delayMicroseconds(10);
 
-  return rx[3] | (rx[2] << 8) | (rx[1] << 16) | (rx[0] << 24);
+  uint32_t response = rx[3] | (rx[2] << 8) | (rx[1] << 16) | (rx[0] << 24);
+  if (debugging_enabled) {
+    Serial.print(" Received: ");
+    Serial.println(response, HEX);
+  }
+  return response;
 }
 
 GbaSpi::~GbaSpi() {
     SPI.end();
+}
+
+void GbaSpi::enableDebugging() {
+  debugging_enabled = true;
+}
+
+void GbaSpi::disableDebugging() {
+  debugging_enabled = false;
 }

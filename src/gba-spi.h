@@ -5,12 +5,16 @@
 
 class GbaSpi {
 private:
-    /* data */
+    bool debugging_enabled = false;
+
 public:
     GbaSpi();
     ~GbaSpi();
     void begin();
     uint32_t WriteSPI32(uint32_t w);
+    
+    void enableDebugging();
+    void disableDebugging();
 };
 
 extern GbaSpi GBA_SPI;
